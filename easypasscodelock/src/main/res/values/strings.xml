@@ -2,4 +2,6 @@
     <string name="app_name">EasyPasscodeLock</string>
     <string name="digital_enter_password">Enter a New Password</string>
     <string name="digital_confirm_password">Confirm Password</string>
+    <string name="digital_enter_your_password">Enter your password</string>
+    <string name="digital_forgot_passwords">Forgot password?</string>
 </resources>

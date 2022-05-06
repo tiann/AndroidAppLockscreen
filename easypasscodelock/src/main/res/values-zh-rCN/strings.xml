@@ -3,4 +3,6 @@
     <string name="app_name">EasyPasscodeLock</string>
     <string name="digital_enter_password">请输入一个新密码</string>
     <string name="digital_confirm_password">请确认密码</string>
+    <string name="digital_enter_your_password">请输入密码</string>
+    <string name="digital_forgot_passwords">忘记密码？</string>
 </resources>

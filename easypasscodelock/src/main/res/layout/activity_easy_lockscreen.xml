@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/background_layout"
     android:background="#019689"
     android:orientation="vertical"
     tools:context="p32929.easypasscodelock.Activities.LockscreenActivity">
@@ -27,23 +27,20 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/haha_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/input_password_layout"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="16dp"
-            android:text="Enter Your Password"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp" />
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
             android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/lbtnDelete"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="8dp"
+                android:src="@mipmap/ic_delete_forever_white_24dp" />
 
             <TextView
                 android:id="@+id/dotText"
@@ -55,20 +52,23 @@
                 android:textColor="#FFFFFF"
                 android:textSize="24sp" />
 
-            <ImageButton
-                android:id="@+id/lbtnDelete"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="8dp"
-                android:src="@mipmap/ic_delete_forever_white_24dp" />
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/haha_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/input_password_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="16dp"
+            android:text="@string/digital_enter_your_password"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
 
     </LinearLayout>
 
@@ -261,7 +261,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/forgot_password_margin_bottom"
-        android:text="Forgot password?"
+        android:text="@string/digital_forgot_passwords"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
