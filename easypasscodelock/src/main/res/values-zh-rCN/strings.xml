@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EasyPasscodeLock</string>
+    <string name="digital_enter_password">请输入一个新密码</string>
+    <string name="digital_confirm_password">请确认密码</string>
+</resources>

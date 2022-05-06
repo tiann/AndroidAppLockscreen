@@ -11,17 +11,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import p32929.easypasscodelock.Interfaces.ActivityChanger;
 import p32929.easypasscodelock.R;
 import p32929.easypasscodelock.Utils.EasyLock;
 import p32929.easypasscodelock.Utils.FayazSP;
 import p32929.easypasscodelock.Utils.LockscreenHandler;
 
-public class LockscreenActivity extends LockscreenHandler implements ActivityChanger {
+public class LockscreenActivity extends LockscreenHandler{
 
-    private static Class classToGoAfter;
+    private static Class<?> classToGoAfter;
+
     String tempPass = "";
-    private int[] passButtonIds = {
+    private final int[] passButtonIds = {
             R.id.lbtn1,
             R.id.lbtn2,
             R.id.lbtn3,
@@ -33,21 +33,18 @@ public class LockscreenActivity extends LockscreenHandler implements ActivityCha
             R.id.lbtn9,
             R.id.lbtn0
     };
-    private TextView textViewDot, textViewHAHA, textViewForgotPassword;
-    private Button buttonTick;
-    private ImageButton imageButtonDelete;
-    private RelativeLayout relativeLayoutBackground;
+    private TextView textViewDot;
+    private TextView textViewHAHA;
 
     private String passString = "", realPass = "";
     private String status = "";
     //
-    private String checkStatus = "check";
-    private String setStatus = "set";
-    private String setStatus1 = "set1";
-    private String disableStatus = "disable";
-    private String changeStatus = "change";
-    private String changeStatus1 = "change1";
-    private String changeStatus2 = "change2";
+    private final String checkStatus = "check";
+    private final String setStatus = "set";
+    private final String setStatus1 = "set1";
+    private final String changeStatus = "change";
+    private final String changeStatus1 = "change1";
+    private final String changeStatus2 = "change2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +57,8 @@ public class LockscreenActivity extends LockscreenHandler implements ActivityCha
 
         status = getIntent().getExtras().getString("passStatus", "check");
         if (status.equals(setStatus))
-            textViewHAHA.setText("Enter a New Password");
+            textViewHAHA.setText(getString(R.string.digital_enter_password));
+        String disableStatus = "disable";
         if (status.equals(disableStatus)) {
             FayazSP.put("password", null);
             Toast.makeText(this, "Password Disabled", Toast.LENGTH_SHORT).show();
@@ -71,10 +69,10 @@ public class LockscreenActivity extends LockscreenHandler implements ActivityCha
     private void initViews() {
         textViewHAHA = findViewById(R.id.haha_text);
         textViewDot = findViewById(R.id.dotText);
-        textViewForgotPassword = findViewById(R.id.forgot_pass_textview);
-        buttonTick = findViewById(R.id.lbtnTick);
-        imageButtonDelete = findViewById(R.id.lbtnDelete);
-        relativeLayoutBackground = findViewById(R.id.background_layout);
+        TextView textViewForgotPassword = findViewById(R.id.forgot_pass_textview);
+        Button buttonTick = findViewById(R.id.lbtnTick);
+        ImageButton imageButtonDelete = findViewById(R.id.lbtnDelete);
+        RelativeLayout relativeLayoutBackground = findViewById(R.id.background_layout);
         relativeLayoutBackground.setBackgroundColor(EasyLock.backgroundColor);
 
         textViewForgotPassword.setOnClickListener(EasyLock.onClickListener);
@@ -93,98 +91,102 @@ public class LockscreenActivity extends LockscreenHandler implements ActivityCha
             public void onClick(View view) {
 
                 //
-                if (status.equals(checkStatus)) {
-                    if (passString.equals(realPass)) {
-                        finish();
-                    } else {
-                        passString = "";
-                        textViewDot.setText(passString);
-                        Toast.makeText(LockscreenActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                switch (status) {
+                    case checkStatus:
+                        if (passString.equals(realPass)) {
+                            finish();
+                        } else {
+                            passString = "";
+                            textViewDot.setText(passString);
+                            Toast.makeText(LockscreenActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
 
-                //
-                else if (status.equals(setStatus)) {
                     //
-                    tempPass = passString;
-                    passString = "";
-                    status = setStatus1;
+                    case setStatus:
+                        //
+                        tempPass = passString;
+                        passString = "";
+                        status = setStatus1;
 
-                    textViewHAHA.setText("Confirm Password");
-                    textViewDot.setText(passString);
-                }
+                        textViewHAHA.setText(getString(R.string.digital_confirm_password));
+                        textViewDot.setText(passString);
+                        break;
 
-                //
-                else if (status.equals(setStatus1)) {
                     //
-                    if (passString.equals(tempPass)) {
-                        FayazSP.put("password", passString);
-                        Toast.makeText(LockscreenActivity.this, "Password is set", Toast.LENGTH_SHORT).show();
-                        gotoActivity();
-                    } else {
+                    case setStatus1:
+                        //
+                        if (passString.equals(tempPass)) {
+                            FayazSP.put("password", passString);
+                            // Toast.makeText(LockscreenActivity.this, "Password is set", Toast.LENGTH_SHORT).show();
+                            onPasswordSet();
 
+                            gotoActivity();
+                        } else {
+
+                            tempPass = passString;
+                            passString = "";
+                            tempPass = "";
+                            status = setStatus;
+
+                            textViewDot.setText(passString);
+                            textViewHAHA.setText(R.string.digital_enter_password);
+                            // Toast.makeText(LockscreenActivity.this, "Please Enter a New Password Again", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+
+                    //
+                    case changeStatus:
+                        if (passString.equals(realPass)) {
+                            tempPass = passString;
+                            passString = "";
+                            tempPass = "";
+                            status = changeStatus1;
+
+                            textViewHAHA.setText(R.string.digital_enter_password);
+                            textViewDot.setText(passString);
+                        } else {
+                            passString = "";
+                            textViewDot.setText(passString);
+                            // Toast.makeText(LockscreenActivity.this, "Please Enter Current Password", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+
+                    //
+                    case changeStatus1:
                         tempPass = passString;
                         passString = "";
-                        tempPass = "";
-                        status = setStatus;
+                        status = changeStatus2;
 
+                        textViewHAHA.setText(R.string.digital_confirm_password);
                         textViewDot.setText(passString);
-                        textViewHAHA.setText("Enter a New Password");
-                        Toast.makeText(LockscreenActivity.this, "Please Enter a New Password Again", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                        break;
 
-                //
-                else if (status.equals(changeStatus)) {
-                    if (passString.equals(realPass)) {
-                        tempPass = passString;
-                        passString = "";
-                        tempPass = "";
-                        status = changeStatus1;
+                    //
+                    case changeStatus2:
+                        if (passString.equals(tempPass)) {
+                            FayazSP.put("password", passString);
+                            // Toast.makeText(LockscreenActivity.this, "Password Changed", Toast.LENGTH_SHORT).show();
+                            gotoActivity();
+                        } else {
 
-                        textViewHAHA.setText("Enter a New Password");
-                        textViewDot.setText(passString);
-                    } else {
-                        passString = "";
-                        textViewDot.setText(passString);
-                        Toast.makeText(LockscreenActivity.this, "Please Enter Current Password", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                            tempPass = passString;
+                            passString = "";
+                            tempPass = "";
+                            status = changeStatus1;
 
-                //
-                else if (status.equals(changeStatus1)) {
-                    tempPass = passString;
-                    passString = "";
-                    status = changeStatus2;
-
-                    textViewHAHA.setText("Confirm Password");
-                    textViewDot.setText(passString);
-                }
-
-                //
-                else if (status.equals(changeStatus2)) {
-                    if (passString.equals(tempPass)) {
-                        FayazSP.put("password", passString);
-                        Toast.makeText(LockscreenActivity.this, "Password Changed", Toast.LENGTH_SHORT).show();
-                        gotoActivity();
-                    } else {
-
-                        tempPass = passString;
-                        passString = "";
-                        tempPass = "";
-                        status = changeStatus1;
-
-                        textViewDot.setText(passString);
-                        textViewHAHA.setText("Enter a New Password");
-                        Toast.makeText(LockscreenActivity.this, "Please Enter a New Password Again", Toast.LENGTH_SHORT).show();
-                    }
+                            textViewDot.setText(passString);
+                            textViewHAHA.setText(R.string.digital_enter_password);
+                            // Toast.makeText(LockscreenActivity.this, "Please Enter a New Password Again", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
                 }
 
             }
         });
 
-        for (int i = 0; i < passButtonIds.length; i++) {
-            final Button button = findViewById(passButtonIds[i]);
+        for (int passButtonId : passButtonIds) {
+            final Button button = findViewById(passButtonId);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -199,19 +201,20 @@ public class LockscreenActivity extends LockscreenHandler implements ActivityCha
         }
     }
 
+    protected void onPasswordSet() {
+
+    }
+
     private String getPassword() {
         return FayazSP.getString("password", null);
     }
 
-    private void gotoActivity() {
-        Intent intent = new Intent(LockscreenActivity.this, classToGoAfter);
-        startActivity(intent);
+    protected void gotoActivity() {
+        if (classToGoAfter != null) {
+            Intent intent = new Intent(LockscreenActivity.this, classToGoAfter);
+            startActivity(intent);
+        }
         finish();
-    }
-
-    @Override
-    public void activityClass(Class activityClassToGo) {
-        classToGoAfter = activityClassToGo;
     }
 
     @Override
